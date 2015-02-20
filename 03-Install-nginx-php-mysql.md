@@ -6,7 +6,7 @@
 
 **Install Nginx, PHP and MySQL**
 
-`sudo apt-get install nginx php5-cli php5-fpm php5-mysql mysql-server mysql-client
+`sudo apt-get install nginx php5-cli php5-fpm php5-mysql mysql-server mysql-client`
 
 **Configure php** 
 
