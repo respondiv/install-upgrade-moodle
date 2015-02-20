@@ -47,6 +47,8 @@ listen = 127.0.0.1:9000
 listen = /var/run/php5-fpm.sock
 ```
 
+Press `ctrl+x` and type `y` to save and exit
+
 **Configure MySQL**
 
 Tell MySQL to generate the directory structure it needs to store its databases and information.
