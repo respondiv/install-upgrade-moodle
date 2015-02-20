@@ -27,7 +27,7 @@ http {
   
   server_tokens off;
   reset_timedout_connection on;
-  add_header Fastcgi-Cache $upstream_cache_status;
+  add_header rd-Fastcgi-Cache $upstream_cache_status;
   
   # Limit Request
   limit_req_zone $binary_remote_addr zone=one:10m rate=1r/s;
@@ -365,6 +365,25 @@ auth_basic_user_file htpasswd-rd;
 # Allowed IP Address List
 allow 127.0.0.1;
 deny all;
+```
+
+Press `ctrl+x` and type `y` to save and exit
+
+*we need to create `htpasswd-rd` file, to create this file perform following steps*
+
+run this command
+
+`openssl passwd`
+
+it will ask you to renter a password and re-enter to confirm it. then it will display that password in encrypted format e.g `O5az.RSPzd.HE`. Copy this 
+
+Create a file `/etc/nginx/htpasswd-rd` and add following
+
+```
+#syntax 
+# username:encrypted-password-generated-by-openssl
+
+username:O5az.RSPzd.H
 ```
 
 Press `ctrl+x` and type `y` to save and exit

@@ -1,18 +1,165 @@
 
-#### Install phpmyadmin
+#### Install phpmyadmin and few admin tools and secure it under different port
+
+**Create a site to contain and access admin stuffs**
+
+[Install or create a SSL certificate if its not already created and installed]()
+
+Make a note of the ssl key with its complete path e.g. `/etc/nginx/admin-ssl/admin.key` and Certificate with its complete path e.g `etc/nginx/admin-ssl/admin.crt`
+
+**Create a web root directory**
+
+`sudo mkdir -p /var/www/admin/htdocs`
+
+**Create and edit a server block config file**
+
+`sudo nano /etc/nginx/sites-available/admin`
+
+Modify the file as follows
+
+```
+server {
+    
+  # Change 33344 to your own port that you had allowed in UFW  
+  listen 33344 default_server ssl spdy;
+
+  access_log   /var/log/nginx/33344.access.log rd_cache;
+  error_log    /var/log/nginx/33344.error.log;
+
+  ssl_certificate /etc/nginx/admin-ssl/admin.crt;
+  ssl_certificate_key /etc/nginx/admin-ssl/admin.key;
+
+
+  # Force HTTP to HTTPS
+  error_page 497 =200 https://$host:33344$request_uri;
+
+  # web root of admin folder
+  root /var/www/admin/htdocs;
+  index index.php index.htm index.html;
+
+  # Turn on directory listing
+  autoindex on;
+
+  location / {
+    include common/acl.conf;
+    try_files $uri $uri/ /index.php?$args;
+  }
+
+  location =  /fpm/status/ {}
+
+  location ~ /fpm/status/(.*) {
+    include fastcgi_params;
+    fastcgi_param  SCRIPT_NAME  /status;
+    fastcgi_pass $1;
+  }
+
+  location ~ \.php$ {
+    include common/acl.conf;
+    try_files $uri =404;
+    include fastcgi_params;
+    fastcgi_pass php;
+  }
+
+  location ~* \.(js|css|jpg|gif|png)$ {
+    root /var/www/admin/htdocs/;
+  }
+}
+```
+
+Press `ctrl+x` and type `y` to save and exit
+
+**Create php.ino file to see phpinfo**
+
+`sudo nano /var/www/admin/htdocs/php/info.php`
+
+Add following codes
+
+```
+<?php
+phpinfo();
+?>
+```
+
+Press `ctrl+x` and type `y` to save and exit
+
+**Create a script to clean nginx Fast-Cgi Cache**
+
+`sudo nano /var/www/admin/htdocs/cache/nginx/clean.php`
+
+Add following codes
+
+```
+<?php
+
+function unlinkRecursive($dir, $deleteRootToo)
+{
+    if(!$dh = opendir($dir))
+    {
+        return;
+    }
+    while (false !== ($obj = readdir($dh)))
+    {
+        if($obj == '.' || $obj == '..')
+        {
+            continue;
+        }
+
+        if (@!unlink($dir . '/' . $obj))
+        {
+            unlinkRecursive($dir.'/'.$obj, true);
+        }
+    }
+
+    closedir($dh);
+
+    if ($deleteRootToo)
+    {
+       @rmdir($dir);
+    }
+
+    return;
+}
+
+/*
+  Change your cache location here.
+  Leave false as it is so that parent cache folder will not be deleted.
+*/
+
+unlinkRecursive("/var/run/nginx-cache/", false) ;
+
+echo "Nginx cache cleaned" ;
+
+?>
+
+```
+
+Press `ctrl+x` and type `y` to save and exit
+
+**Create a script to view and clean Opcache**
+
+`sudo nano /var/www/admin/htdocs/cache/opcache/ocp.php`
+
+Copy the code from [ocp.php]() and paste it there
+
+Press `ctrl+x` and type `y` to save and exit
+
+`sudo nano /var/www/admin/htdocs/cache/opcache/opcache.php`
+
+Copy the code from [opcachep.php]() and paste it there
+
+Press `ctrl+x` and type `y` to save and exit
+
+`sudo nano /var/www/admin/htdocs/cache/opcache/opgui.php`
+
+Copy the code from [opgui.php]() and paste it there
+
+Press `ctrl+x` and type `y` to save and exit
 
 **update and install phpmyadmin**
 
 ```
 sudo apt-get update
 sudo apt-get install phpmyadmin
-```
-
-**Change port of phpmyadmin** 
-
-```
-# add code here
-
 ```
 
 **Force SSL for phpmyadmin - if using ssl**
@@ -47,6 +194,14 @@ sudo php5enmod mcrypt
 # Restart Php-fpm
 sudo service php5-fpm restart
 ```
+
+# Create a symbolic link between phpMyAdmin and your site’s directory
+
+`sudo ln -s /usr/share/phpmyadmin/ /var/www/admin/html/db`
+
+**Give Web Server access to this folder**
+
+`sudo chown www-data:www-data -R /var/www/admin`
 
 **Test and Restart nginx**
 

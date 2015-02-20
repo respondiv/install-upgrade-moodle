@@ -1,4 +1,4 @@
-#### Installing Nginx, PHP and MySQL
+#### Installing Nginx, PHP and MySQL and Memcached
 
 **Update Local Package**
 
@@ -6,7 +6,7 @@
 
 **Install Nginx, PHP and MySQL**
 
-`sudo apt-get install nginx php5-cli php5-fpm php5-mysql mysql-server mysql-client`
+`sudo apt-get install nginx php5-cli php5-fpm php5-mysql mysql-server mysql-client php5-memcached memcached`
 
 **Configure php** 
 
@@ -76,6 +76,10 @@ Press `ctrl+x` and type `y` to save and exit
 **Reload php-fpm**
 
 `sudo service php5-fpm restart`
+
+**Stop, Start or Restart Memcached**
+
+`sudo service memcached restart`
 
 **Test and Restart nginx**
 
