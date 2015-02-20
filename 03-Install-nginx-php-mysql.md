@@ -12,6 +12,7 @@
 
 Edit `/etc/php5/fpm/php.ini`
 
+
 ```
 # edit php.ini file
 sudo nano /etc/php5/fpm/php.ini

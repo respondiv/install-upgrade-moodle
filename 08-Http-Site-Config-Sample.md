@@ -1,8 +1,12 @@
 #### Http Site Config - Without SSL
 
+**Create a server block config file, repeat this for multiple domain or subdomain**
+
+`sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/example.com`
+
 **Edit Server Block Config File**
 
-`sudo nano /etc/nginx/sites-available/example.com` or `sudo ee site edit example.com`
+`sudo nano /etc/nginx/sites-available/example.com` 
 
 Modify the file as follows
 
@@ -14,14 +18,29 @@ server {
   # Make site accessible from http://example.com/
   server_name example.com www.example.com;
   
-  access_log /var/log/nginx/example.com.access.log rt_cache;
+  access_log /var/log/nginx/example.com.access.log respondiv_cache;
   error_log /var/log/nginx/example.com.error.log;
   
+  # website root folder
   root /var/www/example.com/htdocs;
   index index.php index.htm index.html;
   
+  # include fast-cgi cache config file, if enabling fast-cgi cache as primary
+  #(with w3tc cahce use for database and object cache -> memcache)
   include common/wpfc.conf;
+
+  # include w3tc cache config file, if using w3tc cache as primary caching
+  # without Fast-cgi cache
+  include common/w3tc.conf;
+
+  # include common wordpress config file if using WordPRess
   include common/wpcommon.conf;
+
+  # include common php config file, if website is custom created using php
+  # and mysql
+  include common/php.conf;
+
+  # include location config file, this is must
   include common/locations.conf;
   
   # Specify a character set
@@ -60,10 +79,12 @@ server {
 
 ```
 
+**Enable your Server Blocks**
+  
+`sudo ln -s /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/`
+
 **Test and Restart nginx**
 
 `sudo nginx -t && sudo /etc/init.d/nginx restart`
 
-OR
 
-`sudo ee stack restart`

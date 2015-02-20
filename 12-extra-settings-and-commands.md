@@ -1,32 +1,3 @@
-#### Increase File Upload Limit
-
-EasyEngine will increase the file upload size to 100MB automatically. Use this if you need to modify that setting.
-
-**Edit the php config file**
-
-`sudo nano /etc/php5/fpm/php.ini`
-
-**Set / Update following**
-
-Note post_max_size should be larger than upload_max_filesize
-
-```
-upload_max_filesize = 100M
-post_max_size = 120M
-```
-
-**Reload php-fpm**
-
-`sudo service php5-fpm restart`
-
-**Test and Restart nginx**
-
-`sudo nginx -t && sudo /etc/init.d/nginx restart`
-
-**Reboot the system if needed**
-
-`sudo reboot now`
-
 #### Remove `default_server` value from `/etc/nginx/sites-available/default` aka Default Website
 
 **Open the file for editing**
@@ -50,6 +21,20 @@ server {
   ....
 }
 ```
+
+#### Caching
+
+- When enabling Fast-CGI with WordPRess
+    + Ngins helper plugin [https://wordpress.org/plugins/nginx-helper/](https://wordpress.org/plugins/nginx-helper/)
+    + Install [W3TC](https://wordpress.org/plugins/w3-total-cache/) plugin
+        * Enable Database Cache -> Memcahced
+        * Enable Object Cached -> Memcached
+        * Disable Page Cache, Browser Cache and Minify
+- When enabling W3TC Cache with WordPress
+    + Enable Page Cache -> Disk Enhanced
+    + Enable Database Cache -> Memcahced
+    + Enable Object Cached -> Memcached
+    + Disable Browser Cache and Minify
 
 #### Find a file by name
 

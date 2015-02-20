@@ -1,3 +1,9 @@
+#### Create a web rooot directory to host website 
+
+`sudo mkdir -p /var/www/example.com/htdocs`
+
+Repeat above commands to create multiple web root directory to host multiple website
+
 #### Create new SFTP user
 
 **Create a new user**
@@ -8,7 +14,7 @@
 
 `sudo passwd new-sudo-user`
 
-**Change User’s Home Directory**
+**Change User’s Home Directory to web root**
 
 `sudo usermod --home /var/www/example.com/htdocs new-sudo-user`
 
