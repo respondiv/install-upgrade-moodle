@@ -1,6 +1,6 @@
 #### Converting InnoDB tables to Barracuda
 
-** Tools for Conversion **
+**Tools for Conversion**
 
 ```
 Go to the web root
@@ -13,15 +13,20 @@ To proceed with the conversion, run the command using the fix option
 sudo php admin/cli/mysql_compressed_rows.php --fix
 
 ```
-** That's it, good to go
+**That's it, good to go**
 
-**if above commands gives error writing to database error follow these steps, if not ignore them
+**If above commands gives error writing to database error follow these steps, if not ignore them**
 
-sudo php admin/cli/mysql_compressed_rows.php --showsql
+`sudo php admin/cli/mysql_compressed_rows.php --showsql`
 
-copy the displayed SQl Statement
+**Copy the displayed SQl Statement**
 
-then, run mysql using root (or admin account)
+**then, run mysql using root (or admin account)**
 
-mysql -u root
+`mysql -u root`
+
+**Paste the displayed SQL Statement, each line at a time**
+
+**Exit from mysql cli**
+
 
